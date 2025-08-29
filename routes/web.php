@@ -9,6 +9,7 @@ use App\Http\Controllers\Website\WebController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CheckoutController;
 
 // ----------------------------
 // 🔸 Public Route
@@ -30,6 +31,18 @@ Route::post('/add-to-cart', [CartController::class, 'add'])->name('add.to.cart')
 Route::get('/get-cart-items', [CartController::class, 'getAllCartProduct']);
 Route::post('/remove-cart-item', [CartController::class, 'remove'])->name('cart.remove');
 Route::get('/view-cart', [CartController::class, 'viewCart'])->name('view-cart');
+Route::post('/apply-coupon', [CartController::class, 'applyCoupon'])->name('cart.applyCoupon');
+
+// checkout route
+// web.php
+Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+Route::post('/place-order', [CheckoutController::class, 'placeOrder'])->name('place-order');
+
+
+Route::get('/payment-success', [CheckoutController::class, 'paymentSuccess'])->name('payment.success');
+Route::get('/payment-failed', [CheckoutController::class, 'paymentFailed'])->name('payment.failed');
+Route::post('/phonepe-callback', [CheckoutController::class, 'handleCallback']); // For PhonePe callback
+
 
 
 
@@ -81,10 +94,14 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
 });
 
+
 // ----------------------------
 // 🔸 Profile Routes (Protected)
 // ----------------------------
 Route::middleware('auth')->group(function () {
+      Route::get('/user-dashboard', [UserController::class, 'user_dashboard'])->name('user-dashboard');
+      Route::get('/order', [UserController::class, 'user_order'])->name('order');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -270,6 +270,20 @@ function removeCartItem(id, element) {
 }
 
 
+$('#applyCouponForm').on('submit', function(e){
+    e.preventDefault();
+    $.ajax({
+        url: '{{ route("cart.applyCoupon") }}',
+        method: 'POST',
+        data: $(this).serialize(),
+        success: function(response){
+            $('#couponMessage').text(response.message);
+            if(response.status){
+                location.reload(); // refresh to recalculate totals
+            }
+        }
+    });
+});
 
 
 
